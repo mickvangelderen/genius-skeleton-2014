@@ -62,6 +62,7 @@ public class Groupn extends AbstractNegotiationParty {
 	 */
 	@Override
 	public void receiveMessage(Object sender, Action action) {
+		super.receiveMessage(sender, action);
 		// Here you can listen to other parties' messages		
 	}
 
