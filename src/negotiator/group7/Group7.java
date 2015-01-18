@@ -31,7 +31,6 @@ public class Group7 extends AbstractNegotiationParty {
 	
 	public double utilityThreshold = 0.75;
 	
-	public int ROUND = 0;
 	
 	/**
 	 * Please keep this constructor. This is called by genius.
@@ -58,7 +57,6 @@ public class Group7 extends AbstractNegotiationParty {
 	 */
 	@Override
 	public Action chooseAction(List<Class> validActions) {
-		ROUND++;
 		Bid myBid = generateBid();
 		
 		
@@ -80,6 +78,7 @@ public class Group7 extends AbstractNegotiationParty {
 			} catch (Exception e) {
 				//e.printStackTrace();
 			}
+			
 		}
 		else  // Not your first bid
 		{	
@@ -88,7 +87,7 @@ public class Group7 extends AbstractNegotiationParty {
 			
 			try {
 
-				System.out.print("Agent " + this.getPartyId() + "in round " + ROUND +
+				System.out.print("Agent " + this.getPartyId() + "in round " + this.getTimeLine().getCurrentTime() +
 						" thinks the utility of his last bid was " + target + " for himself");
 				
 				int i = 1;
@@ -136,6 +135,7 @@ public class Group7 extends AbstractNegotiationParty {
 			e.printStackTrace();
 		}
 		
+		
 		return null;
 	}
 		
@@ -146,9 +146,9 @@ public class Group7 extends AbstractNegotiationParty {
 		
 		boolean cNext = getUtility(lastBid) >= getUtility(candidateBid);
 		
-		boolean cTime = ROUND > 25;
+		boolean cTime = this.getTimeLine().getCurrentTime() > this.getTimeLine().getTotalTime()/2;
 		
-		System.out.println(">> I am agent " + this.getPartyId() + "in round " + ROUND +
+		System.out.println(">> I am agent " + this.getPartyId() + "in round " + this.getTimeLine().getCurrentTime() +
 				". Utility of my candidate bid: " + getUtility(candidateBid) + ". Utility of last bid received: " + getUtility(lastBid) + ". I should accept: " + cNext + "\n");
 
 		return cNext || (cConst && cTime) ;
