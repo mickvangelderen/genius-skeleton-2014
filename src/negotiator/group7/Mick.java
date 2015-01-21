@@ -110,9 +110,10 @@ public class Mick extends AbstractNegotiationParty {
 		double candidateUtility = getUtility(candidate);
 		double progress = timeline.getTime();
 		double reservation = utilitySpace.getReservationValue();
+		double diff = 1f - reservation;
 		
 		return currentUtility >= candidateUtility ||
-				currentUtility >= interpolate(1f, reservation, progress*10/9); 
+				currentUtility >= reservation + (Math.cos(progress*Math.PI) + 1)/2f*diff; 
 	}
 	
 	private double getAverageOpponentUtility(Bid bid) throws Exception {
