@@ -127,7 +127,7 @@ public class Group7 extends AbstractNegotiationParty {
 				
 				if(getUtility(bid) >= target && getAverageOpponentUtility(bid) > getAverageOpponentUtility(lastBidYouMade))
 					return bid;
-				else if (loops > 100000)
+				else if (loops > 5000)
 					return null;
 			} while (true);
 					

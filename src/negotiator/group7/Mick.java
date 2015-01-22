@@ -1,9 +1,11 @@
 package negotiator.group7;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import agents.bayesianopponentmodel.BayesianOpponentModelScalable;
 import negotiator.Bid;
@@ -12,6 +14,8 @@ import negotiator.Timeline;
 import negotiator.actions.Accept;
 import negotiator.actions.Action;
 import negotiator.actions.Offer;
+import negotiator.issue.Issue;
+import negotiator.issue.Value;
 import negotiator.parties.AbstractNegotiationParty;
 import negotiator.utility.UtilitySpace;
 
@@ -22,6 +26,8 @@ public class Mick extends AbstractNegotiationParty {
 
 	private HashMap<Object, BayesianOpponentModelScalable> OpponentModels = new HashMap<Object, BayesianOpponentModelScalable>();
 	private Bid activeBid = null;
+	private Random random;
+	private Bid maxUtilityBid = null;
 	
 	/**
 	 * Please keep this constructor. This is called by genius.
@@ -34,6 +40,10 @@ public class Mick extends AbstractNegotiationParty {
 	public Mick(UtilitySpace utilitySpace, Map<DeadlineType, Object> deadlines, Timeline timeline, long randomSeed) {
 		// Make sure that this constructor calls it's parent.
 		super(utilitySpace, deadlines, timeline, randomSeed);
+		random = new Random(randomSeed);
+		try {
+			maxUtilityBid = utilitySpace.getMaxUtilityBid();
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 
 	/**
@@ -46,11 +56,16 @@ public class Mick extends AbstractNegotiationParty {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Action chooseAction(List<Class> validActions) {
-		Bid candidateBid = generateBid();
-		if (validActions.contains(Accept.class) && shouldAccept(activeBid, candidateBid)) {
-			return new Accept();
+		try {
+			Bid candidateBid = generateBid();
+			if (validActions.contains(Accept.class) && acceptable(activeBid, candidateBid)) {
+				return new Accept();
+			}
+			return new Offer(candidateBid);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return new Offer(candidateBid);
+		return null;
 	}
 
 	/**
@@ -71,49 +86,31 @@ public class Mick extends AbstractNegotiationParty {
 		}
 	}
 	
-	private Bid generateBid() {
-		try {
-			// Check if we're the first
-			if (activeBid == null) return utilitySpace.getMaxUtilityBid();
-			
-			// Compute random bids while keeping track of the best one and lowering the required utility
-			Bid maxBid = generateRandomBid();
-			double maxOurUtil = getUtility(maxBid);
-			double maxTheirUtil = getAverageOpponentUtility(maxBid);
-			
-			double minUtility = utilitySpace.getReservationValue();
-			double step = (1f - minUtility)/1000;
-			for (double utility = 1f; utility > minUtility; utility -= step) {
-				Bid bid = generateRandomBid();
-				double ourUtil = getUtility(bid);
-				double theirUtil = getAverageOpponentUtility(bid);
-				if (ourUtil > maxOurUtil && theirUtil > maxTheirUtil) {
-					maxOurUtil = ourUtil;
-					maxTheirUtil = theirUtil;
-					maxBid = bid;
-				}
-				if (maxOurUtil >= utility && maxTheirUtil >= utility) return maxBid;
+	private Bid generateBid() throws Exception {
+		// minimum bid quality for this round
+		double min = scaledReservationValue();
+		// start with our maximum utility bid
+		Bid bestBid = new Bid(maxUtilityBid);
+		double bestUtil = getAverageOpponentUtility(bestBid);
+		// for 1000 random bids, check if it is good enough for us and better for the opponents 
+		for (int i = 0; i < 1000; i++) {
+			Bid bid = generateRandomBid();
+			if (getUtility(bid) < min) continue;
+			double util = getAverageOpponentUtility(bid);
+			if (util > bestUtil) {
+				bestBid = bid;
+				bestUtil = util;
 			}
-			
-			// If none found, be stubborn and return your max util bid
-			return utilitySpace.getMaxUtilityBid();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		
-		// If none found, be stubborn and return your max util bid
-		return null;
+		return bestBid;
 	}
 
-	private boolean shouldAccept(Bid active, Bid candidate) {
+	private boolean acceptable(Bid active, Bid candidate) {
 		double currentUtility = getUtility(active);
 		double candidateUtility = getUtility(candidate);
-		double progress = timeline.getTime();
-		double reservation = utilitySpace.getReservationValue();
-		double diff = 1f - reservation;
+		double scaledReservation = scaledReservationValue();
 		
-		return currentUtility >= candidateUtility ||
-				currentUtility >= reservation + (Math.cos(progress*Math.PI) + 1)/2f*diff; 
+		return currentUtility >= Math.min(candidateUtility, scaledReservation);
 	}
 	
 	private double getAverageOpponentUtility(Bid bid) throws Exception {
@@ -136,12 +133,14 @@ public class Mick extends AbstractNegotiationParty {
 		}
 	}
 
-	private double interpolate(double from, double to, double progress) {
-		return from + (to - from)*between(progress, 0f, 1f);
+	private double scaledReservationValue() {
+		double progress = timeline.getTime();
+		double reservation = utilitySpace.getReservationValue();
+		return scale(Math.cos(progress*Math.PI), -1f, 1f, reservation, 1f);
 	}
 	
-	private double between(double value, double min, double max) {
-		return Math.max(min, Math.min(value, max));
+	private double scale(double value, double fromLow, double fromHigh, double toLow, double toHigh) {
+		return toLow + (value - fromLow)/(fromHigh - fromLow)*(toHigh - toLow);
 	}
 }
 
