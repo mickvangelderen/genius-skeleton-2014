@@ -4,19 +4,9 @@
     <agentRepItems/>
     <partyRepItems>
       <partyRepItem
-        description="Agent for group 7"
+        description="Group7 Agent"
         classPath="negotiator.group7.Group7"
-        partyName="Group 7"
-        protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
-      <partyRepItem
-        description="Agent for Weighted Bid Modification"
-        classPath="negotiator.group7.WeightedBidModification"
-        partyName="WeightedBidModification"
-        protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
-      <partyRepItem
-        description="Agent for Mick :D"
-        classPath="negotiator.group7.Mick"
-        partyName="Mick"
+        partyName="Group7"
         protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
     </partyRepItems>
     <domainRepItem/>

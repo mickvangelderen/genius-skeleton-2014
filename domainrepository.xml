@@ -14,7 +14,18 @@
                 <profile url="file:etc/templates/partydomain/party7_utility.xml"/>
                 <profile url="file:etc/templates/partydomain/party8_utility.xml"/>
                 <profile url="file:etc/templates/partydomain/party9_utility.xml"/>
-            </domainRepItem>            
+            </domainRepItem>
+            <domainRepItem url="file:etc/templates/movie/movie.xml">
+                <profile url="file:etc/templates/movie/movie-profile1.xml"/>
+                <profile url="file:etc/templates/movie/movie-profile2.xml"/>
+                <profile url="file:etc/templates/movie/movie-profile3.xml"/>
+                <profile url="file:etc/templates/movie/movie-profile4.xml"/>
+                <profile url="file:etc/templates/movie/movie-profile5.xml"/>
+                <profile url="file:etc/templates/movie/movie-profile6.xml"/>
+                <profile url="file:etc/templates/movie/movie-profile7.xml"/>
+                <profile url="file:etc/templates/movie/movie-profile8.xml"/>
+                <profile url="file:etc/templates/movie/movie-profile9.xml"/>
+            </domainRepItem>
         </domainRepItem>
         <protocolRepItem/>
         <multiPartyProtocolRepItem/>
