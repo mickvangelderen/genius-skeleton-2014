@@ -15,7 +15,7 @@ import negotiator.utility.UtilitySpace;
 /**
  * This is your negotiation party.
  */
-public class Group7 extends AbstractNegotiationParty {
+public class Trig extends AbstractNegotiationParty {
 
 	private Bid activeBid = null;
 	private Bid maxUtilityBid = null;
@@ -31,7 +31,7 @@ public class Group7 extends AbstractNegotiationParty {
 	 * @param timeline Value counting from 0 (start) to 1 (end).
 	 * @param randomSeed If you use any randomization, use this seed for it.
 	 */
-	public Group7(UtilitySpace utilitySpace, Map<DeadlineType, Object> deadlines, Timeline timeline, long randomSeed) {
+	public Trig(UtilitySpace utilitySpace, Map<DeadlineType, Object> deadlines, Timeline timeline, long randomSeed) {
 		// Make sure that this constructor calls it's parent.
 		super(utilitySpace, deadlines, timeline, randomSeed);
 		
