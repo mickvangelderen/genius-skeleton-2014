@@ -1,11 +1,8 @@
 package negotiator.group7;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import agents.bayesianopponentmodel.BayesianOpponentModelScalable;
 import negotiator.Bid;
 import negotiator.DeadlineType;
 import negotiator.Timeline;
@@ -20,10 +17,11 @@ import negotiator.utility.UtilitySpace;
  */
 public class Group7 extends AbstractNegotiationParty {
 
-	private HashMap<Object, BayesianOpponentModelScalable> opponentModels = new HashMap<Object, BayesianOpponentModelScalable>();
 	private Bid activeBid = null;
-
 	private Bid maxUtilityBid = null;
+	private double declineStart = 0.8;
+	private double startUtility = 0.95;
+	private double endUtility = utilitySpace.getReservationValueUndiscounted();
 	
 	/**
 	 * Please keep this constructor. This is called by genius.
@@ -36,7 +34,7 @@ public class Group7 extends AbstractNegotiationParty {
 	public Group7(UtilitySpace utilitySpace, Map<DeadlineType, Object> deadlines, Timeline timeline, long randomSeed) {
 		// Make sure that this constructor calls it's parent.
 		super(utilitySpace, deadlines, timeline, randomSeed);
-
+		
 		try {
 			maxUtilityBid = utilitySpace.getMaxUtilityBid();
 		} catch (Exception e) { e.printStackTrace(); }
@@ -52,15 +50,13 @@ public class Group7 extends AbstractNegotiationParty {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Action chooseAction(List<Class> validActions) {
+		System.out.println(cosDiscount(scale(timeline.getTime(), declineStart, 1f, 0f, 1f), startUtility, endUtility));
 		try {
 			Bid candidateBid = generateBid();
-			if (validActions.contains(Accept.class) && acceptable(activeBid, candidateBid)) {
+			if (validActions.contains(Accept.class) && acceptable(activeBid))
 				return new Accept();
-			}
 			return new Offer(candidateBid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) { e.printStackTrace(); }
 		return null;
 	}
 
@@ -74,85 +70,45 @@ public class Group7 extends AbstractNegotiationParty {
 	@Override
 	public void receiveMessage(Object sender, Action action) {
 		Bid bid = Action.getBidFromAction(action);
-		
-		if (bid != null) {
-			// update the active bid
-			activeBid = bid;
-			updateOpponentModel(sender, bid);
-		}
+		if (bid != null) activeBid = bid;
 	}
 	
+	/**
+	 * Generate a random bid that this agent would currently find acceptable. 
+	 * @return An acceptable bid. 
+	 * @throws Exception
+	 */
 	private Bid generateBid() throws Exception {
-		// minimum bid quality for this round
-		double min = scaledReservationValue();
-		// start with our maximum utility bid
-		Bid bestBid = new Bid(maxUtilityBid);
-		double bestTheirs = getAverageOpponentUtility(bestBid);
-		//  
-		for (int i = 0; i < 5000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			Bid bid = generateRandomBid();
-			
-			double ours = getUtility(bid);
-			if (ours < min) continue;
-			
-			if (!fairEnough(bid)) continue;
-			
-			double theirs = getAverageOpponentUtility(bid);
-			if (theirs > bestTheirs) {
-				bestBid = bid;
-				bestTheirs = theirs;
-			}
+			if (acceptable(bid)) return bid;
 		}
-		return bestBid;
+		return new Bid(maxUtilityBid);
 	}
 
-	private boolean acceptable(Bid active, Bid candidate) {
-		double utility = getUtility(active);
-		double candidateUtility = getUtility(candidate);
-		double scaledReservation = scaledReservationValue();
-		
-		return utility >= Math.min(candidateUtility, scaledReservation) && fairEnough(active);
-	}
-	
-	private boolean fairEnough(Bid bid) {
-		return getUtility(bid) + 0.10f > getMaximumOpponentUtility(bid); 
-	}
-	
-	private double getMaximumOpponentUtility(Bid bid) {
-		double max = Double.MIN_VALUE;
-		for (BayesianOpponentModelScalable m : opponentModels.values()) {
-			try {
-				double u = m.getExpectedUtility(bid);
-				if (u > max) max = u;
-			} catch (Exception e) { e.printStackTrace(); }
-		}
-		return max;
-	}
-
-	private double getAverageOpponentUtility(Bid bid) throws Exception {
-		Collection<BayesianOpponentModelScalable> models = opponentModels.values();
-		double sum = 0;
-		for (BayesianOpponentModelScalable m : models) sum += m.getExpectedUtility(bid);
-		return sum/models.size();
-	}
-	
-	private void updateOpponentModel(Object agent, Bid bid) {
-		BayesianOpponentModelScalable model = opponentModels.get(agent);
-		if (model == null) {
-			model = new BayesianOpponentModelScalable(this.utilitySpace);
-			opponentModels.put(agent, model);
-		}
-		try {
-			model.updateBeliefs(bid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private double scaledReservationValue() {
+	/**
+	 * Determine if a bid is currently acceptable. 
+	 * This depends on the negotiation progress. 
+	 * Bids with a lower utility become acceptable when nearing the deadline.  
+	 * @param bid
+	 * @return
+	 */
+	private boolean acceptable(Bid bid) {
 		double progress = timeline.getTime();
-		double reservation = utilitySpace.getReservationValue();
-		return scale(Math.cos(progress*Math.PI/2), 0, 1f, reservation, 1f);
+		return progress < declineStart ?
+			getUtility(bid) > startUtility :
+			getUtility(bid) > cosDiscount(scale(progress, declineStart, 1f, 0f, 1f), startUtility, endUtility);
+	}
+	
+	/**
+	 * Calculate a discount based on the cosine function. Interpolates using first quarter of the cosine.
+	 * @param progress Value between 0.0 to 1.0. 
+	 * @param high Return value when progress equals 0.0. 
+	 * @param low Return value when progress equals 1.0. 
+	 * @return Interpolated value between to and from. 
+	 */
+	private double cosDiscount(double progress, double high, double low) {
+		return scale(Math.cos(progress*Math.PI/2), 0, 1f, low, high);
 	}
 	
 	private double scale(double value, double fromLow, double fromHigh, double toLow, double toHigh) {
