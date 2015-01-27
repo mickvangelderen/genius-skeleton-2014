@@ -10,7 +10,7 @@
             <partyRepItem description="Agent for group 4" classPath="negotiator.group4.Group4" partyName="Group 4" protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
             <partyRepItem description="Agent for group 5" classPath="negotiator.group5.Group5" partyName="Group 5" protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
             <partyRepItem description="Agent for group 6" classPath="negotiator.group6.Group6" partyName="Group 6" protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
-            <!--<partyRepItem description="Agent for group 7" classPath="negotiator.group7.Group7" partyName="Group 7" protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>-->
+            <partyRepItem description="Agent for group 7" classPath="negotiator.group7.Group7" partyName="Group 7" protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
             <partyRepItem description="Agent for group 8" classPath="negotiator.group8.Group8" partyName="Group 8" protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
             <!--<partyRepItem description="Agent for group 9" classPath="negotiator.group9.Group9" partyName="Group 9" protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>-->
             <partyRepItem description="Agent for group 10" classPath="negotiator.group10.Group10" partyName="Group 10" protocolClassPath="negotiator.protocol.AlternatingOfferCounterOfferProtocol"/>
