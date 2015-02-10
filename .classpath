@@ -7,5 +7,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/genius-skeleton-2014/genius_docs-5.2.0.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="agents"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
