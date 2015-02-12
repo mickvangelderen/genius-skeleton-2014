@@ -1,4 +1,4 @@
-data = read_tournament2('Log-Tournament_20150212-162959.csv');
+data = read_tournament2('Log-Tournament_20150212-224119.csv');
 
 agents = unique([data{[12 13]}]);
 nagents = length(agents);
@@ -18,5 +18,5 @@ means = mean(cell2mat(utilities));
 stddevs = std(cell2mat(utilities));
 figure
 hold on
-bar(1:3, means)
-errorbar(1:3, means, stddevs, '.')
+bar(1:nagents, means)
+errorbar(1:nagents, means, stddevs, '.')
