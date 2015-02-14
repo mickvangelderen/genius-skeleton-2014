@@ -1,0 +1,36 @@
+<negotiation_template> 
+<utility_space number_of_issues="4"> 
+<objective name="House" index="0" description="" etype="objective" type="objective"> 
+<issue vtype="discrete" name="Location" index="1" etype="discrete" type="discrete"> 
+<item index="1" value="City center"> 
+</item> 
+<item index="2" value="Suburbs"> 
+</item> 
+<item index="3" value="Countryside"> 
+</item> 
+</issue> 
+<issue vtype="discrete" name="Number of rooms" index="2" etype="discrete" type="discrete"> 
+<item index="1" value="2"> 
+</item> 
+<item index="2" value="3"> 
+</item> 
+<item index="3" value="4"> 
+</item> 
+</issue> 
+<issue vtype="discrete" name="Garden" index="3" etype="discrete" type="discrete"> 
+<item index="1" value="Yes"> 
+</item> 
+<item index="2" value="No"> 
+</item> 
+</issue> 
+<issue vtype="discrete" name="Budget" index="4" etype="discrete" type="discrete"> 
+<item index="1" value="100000"> 
+</item> 
+<item index="2" value="200000"> 
+</item> 
+<item index="3" value="300000"> 
+</item> 
+</issue> 
+</objective> 
+</utility_space> 
+</negotiation_template> 

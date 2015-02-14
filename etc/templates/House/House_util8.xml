@@ -1,0 +1,46 @@
+<utility_space> 
+<objective name="House" index="0" description="" etype="objective" type="objective"> 
+<issue vtype="discrete" name="Location" index="1" etype="discrete" type="discrete"> 
+<item evaluation="3" index="1" value="City center"> 
+</item> 
+<item evaluation="2" index="2" value="Suburbs"> 
+</item> 
+<item evaluation="1" index="3" value="Countryside"> 
+</item> 
+</issue> 
+<issue vtype="discrete" name="Number of rooms" index="2" etype="discrete" type="discrete"> 
+<item evaluation="2" index="1" value="2"> 
+</item> 
+<item evaluation="1" index="2" value="3"> 
+</item> 
+<item evaluation="3" index="3" value="4"> 
+</item> 
+</issue> 
+<issue vtype="discrete" name="Garden" index="3" etype="discrete" type="discrete"> 
+<item evaluation="1" index="1" value="Yes"> 
+</item> 
+<item evaluation="2" index="2" value="No"> 
+</item> 
+</issue> 
+<issue vtype="discrete" name="Budget" index="4" etype="discrete" type="discrete"> 
+<item evaluation="1" index="1" value="100000"> 
+</item> 
+<item evaluation="3" index="2" value="200000"> 
+</item> 
+<item evaluation="2" index="3" value="300000"> 
+</item> 
+</issue> 
+<weight index="1" value="0.4022059634191662"> 
+</weight> 
+<weight index="2" value="0.2"> 
+</weight> 
+<weight index="3" value="0.19532067147686064"> 
+</weight> 
+<weight index="4" value="0.19511753578253102"> 
+</weight> 
+</objective> 
+<discount_factor value="1.0"> 
+</discount_factor> 
+<reservation value="0.0"> 
+</reservation> 
+</utility_space> 
