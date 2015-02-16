@@ -137,7 +137,17 @@
                 <profile url="file:etc/templates/ANAC2015/group12-symposium/Symposium-Profile8.xml"/>
                 <profile url="file:etc/templates/ANAC2015/group12-symposium/Symposium-Profile9.xml"/>
             </domainRepItem>
-            <domainRepItem url="file:etc/templates/House/House.xml"/>
+            <domainRepItem url="file:etc/templates/House/House.xml">
+                <profile url="file:etc/templates/House/House_util1.xml"/>
+                <profile url="file:etc/templates/House/House_util2.xml"/>
+                <profile url="file:etc/templates/House/House_util3.xml"/>
+                <profile url="file:etc/templates/House/House_util4.xml"/>
+                <profile url="file:etc/templates/House/House_util5.xml"/>
+                <profile url="file:etc/templates/House/House_util6.xml"/>
+                <profile url="file:etc/templates/House/House_util7.xml"/>
+                <profile url="file:etc/templates/House/House_util8.xml"/>
+                <profile url="file:etc/templates/House/House_util9.xml"/>
+            </domainRepItem>
         </domainRepItem>
         <protocolRepItem/>
         <multiPartyProtocolRepItem/>
